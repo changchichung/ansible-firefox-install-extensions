@@ -1,0 +1,1 @@
+# ansible-firefox-install-extensions
