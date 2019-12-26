@@ -1,5 +1,9 @@
 # ansible-firefox-install-extensions
 
+## only test in ubuntu 18.04
+
+---
+
 會寫這個的原因是因為現在工作環境都是linux 的 client
 
 然後我習慣用firefox ，所以也就想要把firefox 「推廣」到client 上
