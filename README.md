@@ -1,5 +1,33 @@
 # ansible-firefox-install-extensions
 
+會寫這個的原因是因為現在工作環境都是linux 的 client
+
+然後我習慣用firefox ，所以也就想要把firefox 「推廣」到client 上
+
+但是一直找不到一份正確的官方指南來說明如何在企業環境下安裝
+
+不只包含主程式，還有extension 、plugin 等等
+
+所以只好用樣板機的方式，先做一份適用於大部分client 的樣板
+
+然後把樣板派送出去
+
+然後又因為 firefox 對於每個不同user ，會建立一個獨特的 profile
+
+profile 名稱是一串沒有意義的亂碼(三小？)
+
+於是乎，在執行過程中，會去執行一次firefox 來建立每個user不同的 profile
+
+然後再把extension的樣板複製到目標機器上
+
+目前看起來，這樣子的方式應該可行，暫時就先這樣
+
+後面應該還會加上一些 when condition
+
+---
+
+
+
 ### prepare xpi files
 
 * install all extension you wanted in a fresh install firefox
