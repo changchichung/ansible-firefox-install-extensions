@@ -1,6 +1,6 @@
 # ansible-firefox-install-extensions
 
-###prepare xpi files
+### prepare xpi files
 
 * install all extension you wanted in a fresh install firefox
 * create ext.tgz by this command
@@ -20,7 +20,7 @@ tar zxvf ext.tgz ~/.mozilla/firefox/5s17akow.default/extension*
 
 --- 
 
-###modify hosts
+### modify hosts
 
 * modify hosts to fit your environment
 * records in hosts must with ssh_args ForwardAgent
@@ -28,14 +28,14 @@ tar zxvf ext.tgz ~/.mozilla/firefox/5s17akow.default/extension*
 * 依照環境修改 hosts 檔案
 * hosts 裡面必須要有 ssh_args ForwardAgent
 
-###run playbook to deploy
+### run playbook to deploy
 
 ```
 ansible-playbook -i hosts playbook.yml
 ```
 ---
 
-###ansible log
+### ansible log
 
 ```
 $ ansible-playbook -i hosts firefox.yml
