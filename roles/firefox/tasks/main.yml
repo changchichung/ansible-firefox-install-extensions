@@ -1,50 +1,50 @@
 ---
-- name: check if user profile exists
-  become_user: "{{ user }}"
-  stat:
-    path: "{{ firefox_home }}"
-  register: profile_exists
- 
-  #- name: debug profile_exists
-  #  debug:
-  #    var: profile_exists 
-
 - name: install firefox and languages
   apt:
     name: "{{ firefox_packages }}"
     state: present
+   
+- name: check if user profile exists
+  become_user: "{{ item.name }}"
+  stat:
+    path: "{{ firefox_home }}"
+  register: profile_exists
+  with_items: "{{ users }}"
+   
+   
+  #- name: debug profile_exists
+  #  debug:
+  #   var: profile_exists
 
 - name: run firefox to create default profile
-  become_user: "{{ users }}"
+  become_user: "{{ item.item.name }}"
   shell: "firefox --headless &"
   ignore_errors: True
-  when: profile_exists.stat.exists == false
-
+  when: item.stat.exists  == false
+  with_items: "{{ profile_exists.results }}"
+   
 - name: get firefox default profile name
-  become_user: "{{ users }}"
-  shell: "cat {{ firefox_home }}/installs.ini|grep Default|cut -d = -f 2-" #  |cut -d . -f 1"
+  become_user: "{{ item.item.name }}"
+  shell: "cat ~/.mozilla/firefox/installs.ini|grep Default|cut -d = -f 2-" #  |cut -d . -f 1"
   register: profile_name
-
+  with_items: "{{ profile_exists.results }}"
+   
   #- name: debug profile_name
   #  debug:
   #    var: profile_name
-
+   
 - name: send firefox extension config
   copy:
     src: ext.tgz
     dest: /tmp
-  when: profile_exists.stat.exists == false
-
+   
 - name: unarchive ext.tgz to user profile
+  become_user: "{{ item[1].item.name }}"
   unarchive:
     src: /tmp/ext.tgz
-    dest: "{{ firefox_home }}/{{ profile_name.stdout}}/"
+    dest: "{{ firefox_home }}/{{ item[0].stdout }}/"
     remote_src: yes
-    owner: {{ users }}
-  when: profile_exists.stat.exists == false
-
-- name: remove ext.tgz
-  file:
-    path: /tmp/ext.tgz
-    state: absent
-
+    when: item[1].stat.exists == false and item[1].item.name == item[0].item.item.name
+  with_nested:
+    - "{{ profile_name.results }}"  
+    - "{{ profile_exists.results }}"   

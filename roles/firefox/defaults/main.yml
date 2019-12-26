@@ -5,7 +5,10 @@ firefox_packages:
   - firefox-locale-zh-hant
 
 users:
-  - username
+  - { name: 'alvin' }
+  - { name: 'bob' }
+  - { name: 'colin' }
+  - { name: 'david' }
 
 firefox_home: ~/.mozilla/firefox
 
