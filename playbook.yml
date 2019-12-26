@@ -1,0 +1,7 @@
+##### define hosts in file "hosts"
+- hosts: all
+  become: yes
+  
+  roles:
+    - { role: firefox , tags: firefox }
+

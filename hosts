@@ -1,0 +1,2 @@
+##### define hosts , must configure with ssh_args ForwardAgent 
+laptop ansible_host=192.168.11.1 ssh_args="-o ForwardAgent=yes"

@@ -1,0 +1,6 @@
+---
+info:
+  author: Eric Chang
+  role_name: ansible-firefox-install-extensions
+  description: "config my own firefox"
+

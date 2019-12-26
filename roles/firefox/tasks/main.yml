@@ -1,0 +1,32 @@
+---
+- name: install firefox and languages
+  apt:
+    name: "{{ firefox_packages }}"
+    state: present
+
+- name: run firefox to create default profile
+  become_user: "{{ users }}"
+  shell: "firefox --headless &"
+  ignore_errors: True
+
+- name: get firefox default profile name
+  become_user: "{{ users }}"
+  shell: "cat ~/.mozilla/firefox/installs.ini|grep Default|cut -d = -f 2-" #  |cut -d . -f 1"
+  register: profile_name
+
+- name: debug profile_name
+  debug:
+    var: profile_name
+
+- name: send firefox extension config
+  copy:
+    src: ext.tgz
+    dest: /tmp
+
+- name: unarchive ext.tgz to user profile
+  unarchive:
+    src: /tmp/ext.tgz
+    dest: /home/{{ users }}/.mozilla/firefox/{{ profile_name.stdout}}/
+    remote_src: yes
+    owner: {{ users }}
+

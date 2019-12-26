@@ -1,0 +1,11 @@
+---
+
+firefox_packages:
+  - firefox
+  - firefox-locale-zh-hant
+
+users:
+  - username
+
+firefox_home: ~/.mozilla/firefox
+
