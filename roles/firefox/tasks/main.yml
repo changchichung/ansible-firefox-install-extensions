@@ -1,4 +1,14 @@
 ---
+- name: check if user profile exists
+  become_user: "{{ user }}"
+  stat:
+    path: "{{ firefox_home }}"
+  register: profile_exists
+ 
+  #- name: debug profile_exists
+  #  debug:
+  #    var: profile_exists 
+
 - name: install firefox and languages
   apt:
     name: "{{ firefox_packages }}"
@@ -8,25 +18,33 @@
   become_user: "{{ users }}"
   shell: "firefox --headless &"
   ignore_errors: True
+  when: profile_exists.stat.exists == false
 
 - name: get firefox default profile name
   become_user: "{{ users }}"
-  shell: "cat ~/.mozilla/firefox/installs.ini|grep Default|cut -d = -f 2-" #  |cut -d . -f 1"
+  shell: "cat {{ firefox_home }}/installs.ini|grep Default|cut -d = -f 2-" #  |cut -d . -f 1"
   register: profile_name
 
-- name: debug profile_name
-  debug:
-    var: profile_name
+  #- name: debug profile_name
+  #  debug:
+  #    var: profile_name
 
 - name: send firefox extension config
   copy:
     src: ext.tgz
     dest: /tmp
+  when: profile_exists.stat.exists == false
 
 - name: unarchive ext.tgz to user profile
   unarchive:
     src: /tmp/ext.tgz
-    dest: /home/{{ users }}/.mozilla/firefox/{{ profile_name.stdout}}/
+    dest: "{{ firefox_home }}/{{ profile_name.stdout}}/"
     remote_src: yes
     owner: {{ users }}
+  when: profile_exists.stat.exists == false
+
+- name: remove ext.tgz
+  file:
+    path: /tmp/ext.tgz
+    state: absent
 
